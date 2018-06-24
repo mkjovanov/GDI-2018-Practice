@@ -190,6 +190,7 @@ MonoBehaviour:
   _fireAtTransform: {fileID: 1006043699}
   _shootingForce: 1500
   _reloadTime: 1
+  _mainCamera: {fileID: 1251660956}
 --- !u!1001 &867711794
 Prefab:
   m_ObjectHideFlags: 0
@@ -257,7 +258,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 446194, guid: 756d3a6506f2f8241b4e8badde68567a, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -18.43
+      value: -6.49
       objectReference: {fileID: 0}
     - target: {fileID: 446194, guid: 756d3a6506f2f8241b4e8badde68567a, type: 2}
       propertyPath: m_LocalRotation.x

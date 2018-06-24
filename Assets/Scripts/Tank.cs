@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Tank : MonoBehaviour
 {
@@ -16,25 +14,30 @@ public class Tank : MonoBehaviour
 	private float _shootingForce = 1500;
 	[SerializeField]
 	private float _reloadTime = 1f;
+	[SerializeField]
+	private Camera _mainCamera;
 
 	private Rigidbody _myRigidBody;
 
 	private bool _isMovingForward;
 	private bool _isMovingBackward;
 	private float _timeToReload;
+	private float _cameraSpeed = 0.5f;
+	private bool _isPlayerMoving;
 
 	public void Awake()
 	{
 		_myRigidBody = GetComponent<Rigidbody>();
 	}
 
-	void Start()
+	private void Start()
 	{
 		Debug.Log("Start");
 	}
 
-	void Update()
+	private void Update()
 	{
+		_isPlayerMoving = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A);
 		_isMovingForward = Input.GetKey(KeyCode.W);
 		_isMovingBackward = Input.GetKey(KeyCode.S);
 
@@ -57,7 +60,8 @@ public class Tank : MonoBehaviour
 		}
 	}
 
-	void FixedUpdate()
+
+	private void FixedUpdate()
 	{
 		if (_isMovingForward)
 		{
@@ -67,11 +71,10 @@ public class Tank : MonoBehaviour
 		{
 			_myRigidBody.AddForce(-transform.forward * _moveSpeed * Time.deltaTime);
 		}
-	}
-
-	void OnDestroy()
-	{
-		Debug.Log("Destroy");
+		if (_isPlayerMoving)
+		{
+			//PlayerCameraFollow();
+		}
 	}
 
 	private void Shoot()
@@ -81,5 +84,21 @@ public class Tank : MonoBehaviour
 		bullet.transform.position = _fireAtTransform.position;
 		bullet.transform.rotation = transform.rotation;
 		bullet.GetComponent<Rigidbody>().AddForce(_shootingForce * transform.forward);
+	}
+
+	private void PlayerCameraFollow()
+	{
+		var interpolation = _cameraSpeed * Time.deltaTime;
+
+		var position = _mainCamera.transform.position;
+		position.z = Mathf.Lerp(_mainCamera.transform.position.z, transform.position.z, interpolation);
+		position.x = Mathf.Lerp(_mainCamera.transform.position.x, transform.position.x, interpolation);
+
+		_mainCamera.transform.position = position;
+
+		Debug.Log("--------------------------------");
+		Debug.Log("Camera: x - " + _mainCamera.transform.position.x + ", z - " + _mainCamera.transform.position.z);
+		Debug.Log("Player: x - " + transform.position.x + ", z - " + transform.position.z);
+		Debug.Log("--------------------------------");
 	}
 }
