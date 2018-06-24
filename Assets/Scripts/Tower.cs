@@ -18,7 +18,6 @@ public class Tower : MonoBehaviour
 	private float _timeToReload = 1f;
 	private Tank _tank;
 
-
 	private void Start()
 	{
 		_tank = FindObjectOfType<Tank>();
@@ -27,7 +26,7 @@ public class Tower : MonoBehaviour
 	private void Update()
 	{
 		var isPlayerWithinRange = Vector3.Distance(_tank.transform.position, transform.position) <= _towerRange;
-		if (isPlayerWithinRange)
+		if (true)
 		{
 			var towerToTank = _tank.transform.position - transform.position;
 			towerToTank.y = 0f;

@@ -16,28 +16,36 @@ public class Tank : MonoBehaviour
 	private float _reloadTime = 1f;
 	[SerializeField]
 	private Camera _mainCamera;
+	[SerializeField]
+	private int _startingHealth;
 
 	private Rigidbody _myRigidBody;
-
 	private bool _isMovingForward;
 	private bool _isMovingBackward;
 	private float _timeToReload;
-	private float _cameraSpeed = 0.5f;
+	private float _cameraSpeed = 0.05f;
 	private bool _isPlayerMoving;
+	
+	private int _health;
+	public int Health
+	{
+		get { return _health; }
+		private set
+		{
+			Debug.Log("Health.set - old value: " + Health + ", new value: " + value);
+			_health = value;
+			GameManager.Instance.OnHealthChange(Health);
+		}
+	}
 
 	public void Awake()
 	{
 		_myRigidBody = GetComponent<Rigidbody>();
-	}
-
-	private void Start()
-	{
-		Debug.Log("Start");
+		_health = _startingHealth;
 	}
 
 	private void Update()
 	{
-		_isPlayerMoving = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A);
 		_isMovingForward = Input.GetKey(KeyCode.W);
 		_isMovingBackward = Input.GetKey(KeyCode.S);
 
@@ -58,8 +66,8 @@ public class Tank : MonoBehaviour
 		{
 			Shoot();
 		}
+		//PlayerCameraFollow();
 	}
-
 
 	private void FixedUpdate()
 	{
@@ -71,9 +79,14 @@ public class Tank : MonoBehaviour
 		{
 			_myRigidBody.AddForce(-transform.forward * _moveSpeed * Time.deltaTime);
 		}
-		if (_isPlayerMoving)
+	}
+
+	public void OnHit()
+	{
+		Health--;
+		if(_health == 0)
 		{
-			//PlayerCameraFollow();
+			Destroy(gameObject);
 		}
 	}
 
@@ -88,7 +101,7 @@ public class Tank : MonoBehaviour
 
 	private void PlayerCameraFollow()
 	{
-		var interpolation = _cameraSpeed * Time.deltaTime;
+		var interpolation = _cameraSpeed;// * Time.deltaTime;
 
 		var position = _mainCamera.transform.position;
 		position.z = Mathf.Lerp(_mainCamera.transform.position.z, transform.position.z, interpolation);

@@ -4,21 +4,52 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour 
 {
-	void OnTriggerEnter(Collider other)
+	private bool _exploding;
+	private float _timeToDestroy;
+
+	private void Update()
 	{
-		Destroy(gameObject);
-		// if(other.gameObject.CompareTag("Destroyable"))
-		// {
-		// 	Destroy(other.gameObject);
-		// }
-		if(other.gameObject.layer == LayerMask.NameToLayer("Buildings"))
+		if (_exploding)
 		{
-			Destroy(other.gameObject);
+			_timeToDestroy -= Time.deltaTime;
+			if (_timeToDestroy <= 0f)
+			{
+				Destroy(gameObject);
+			}
 		}
 	}
 
-	void OnCollisionEnter(Collision other)
+	void OnTriggerEnter(Collider other)
 	{
-		Debug.LogError("OnCollisionEnter");
+		Destroy(gameObject);
+		if(	other.gameObject.layer == LayerMask.NameToLayer("Buildings") ||
+			other.gameObject.layer == LayerMask.NameToLayer("Destroyable"))
+		{
+			Destroy(other.gameObject);
+		}
+
+		if(_exploding)
+		{
+			return;
+		}
+
+		if (other.gameObject.CompareTag("Destroyable"))
+		{
+			var tank = other.gameObject.GetComponent<Tank>();
+			if(tank != null)
+			{
+				tank.OnHit();
+			}
+			else
+			{
+				other.gameObject.SetActive(false);
+			}
+		}
+
+		// fire explosion and explode
+		//GetComponentInChildren<ParticleSystem>().Play();
+		//GetComponent<Rigidbody>().velocity = Vector3.zero;
+		//_timeToDestroy = 0.5f;
+		//_exploding = true;
 	}
 }
