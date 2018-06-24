@@ -37,18 +37,18 @@ public class Tower : MonoBehaviour
 		var rotation = Quaternion.LookRotation(towerToTank);
 		transform.rotation = Quaternion.Slerp(transform.rotation, rotation, _rotateSpeed * Time.deltaTime);
 
-		Debug.DrawRay(_fireAt.position, _fireAt.forward * 1000, Color.red, 1f);
 		if(_timeToReload > 0)
         {
             _timeToReload -= Time.deltaTime;
         }
 
+		Debug.DrawRay(_fireAt.position, _fireAt.forward * 1000, Color.red, 1f);
 		if(_timeToReload <= 0f)
 		{
 			RaycastHit hit;
-			//if(Physics.Raycast(_fireAt.position, _fireAt.forward, out hit, 1000f, _blockingLayers))
+			if(Physics.Raycast(_fireAt.position, _fireAt.forward, out hit, 1000f))
 			{
-				//if(hit.transform.gameObject.layer == LayerMask.NameToLayer("Tank"))
+				if(hit.transform.gameObject.layer == LayerMask.NameToLayer("Tank"))
 				{
 					Shoot();
 					_reloadTime = _timeToReload;
