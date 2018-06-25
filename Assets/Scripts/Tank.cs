@@ -86,7 +86,7 @@ public class Tank : MonoBehaviour
 		Health--;
 		if(_health == 0)
 		{
-			Destroy(gameObject);
+			gameObject.SetActive(false);
 		}
 	}
 
