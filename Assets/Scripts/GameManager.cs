@@ -1,18 +1,17 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameManager : MonoBehaviour 
+public class GameManager : MonoBehaviour
 {
 	public GameStateType GameState { get; set; }
 	public static GameManager Instance
 	{
 		get
 		{
-			if(_instance == null)
+			if (_instance == null)
 			{
 				_instance = FindObjectOfType<GameManager>();
 			}
@@ -25,10 +24,10 @@ public class GameManager : MonoBehaviour
 		Paused,
 		EndGame,
 	}
-	
+
 	public Action<bool> OnGameEnds;
 	public Action<int> OnHealthChange;
-	
+
 	private static GameManager _instance;
 	private Tank _tank;
 	private List<Tower> _towers;
@@ -47,7 +46,7 @@ public class GameManager : MonoBehaviour
 			Time.timeScale = 0f;
 			GameState = GameStateType.EndGame;
 
-			if(OnGameEnds != null)
+			if (OnGameEnds != null)
 			{
 				var playerHasWon = _tank.Health > 0;
 				OnGameEnds(playerHasWon);
@@ -92,8 +91,8 @@ public class GameManager : MonoBehaviour
 
 	private bool IsEnd()
 	{
-		return 
-			_tank.Health == 0 || 
+		return
+			_tank.Health == 0 ||
 			_towers.All(tower => !tower.gameObject.activeInHierarchy);
 	}
 }
